@@ -1,6 +1,7 @@
 """Main file."""
 
 import logging
+from typing import Optional
 
 import cv2
 import numpy as np
@@ -18,9 +19,7 @@ class CLI:
         self.logger = logging.getLogger("CLI")
         self.logger.info("Starting your request !")
 
-    def encode(
-        self, model: str, image_path: str, message_path: str, output_path: str
-    ) -> None:
+    def encode(self, model: str, image_path: str, message_path: str, output_path: str) -> None:
         """Encode a message in an image."""
         self.logger.info("Encoding message in image.")
 
@@ -33,18 +32,21 @@ class CLI:
 
         self._save_image(encoded_image, output_path)
 
-    def encode(self, model: str, image_path: str, message_path: str) -> None:
+    def decode(self, model: str, image_path: str, output_path: Optional[str]) -> None:
         """Encode a message in an image."""
         self.logger.info("Encoding message in image.")
 
         model_instance = get_model(model)
 
         image = self._load_image(image_path)
-        message = self._load_message(message_path)
 
-        encoded_image = model_instance.encode(image, message)
+        decoded_message = model_instance.decode(image)
 
-        self._save_image(encoded_image, output_path)
+        if output_path:
+            self._save_message(decoded_message, output_path)
+        else:
+            print(f"Message: {decoded_message}")
+        return decoded_message
 
     def _load_message(self, message_path: str) -> MessageType:
         """Load a message (can be a text or image)."""
@@ -52,12 +54,12 @@ class CLI:
         if message_path.endswith(".txt"):
             with open(message_path, "r", encoding="utf-8") as f:
                 message = f.read()
-                self.logger.info(
-                    "Message loaded, type text with %i characters.", len(message)
-                )
+                self.logger.info("Message loaded, type text with %i characters.", len(message))
                 return message
         if any(message_path.endswith(x) for x in {".png", ".jpg"}):
             raise NotImplementedError("Not yet implemented for images.")
+        self.logger.info("We consider this is a plain text")
+        return message_path
         raise ValueError("Unknown file type.")
 
     def _load_image(self, image_path: str) -> np.ndarray:

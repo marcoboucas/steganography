@@ -3,23 +3,25 @@
 
 from abc import ABC, abstractmethod
 
+import numpy as np
+
 from src.types import MessageType
 
 
 class BaseStenographyModel(ABC):
     """Base model for stenography."""
 
-    HANDLE_TEXT = False
-    HANDLE_IMAGE = False
-
     def __init__(self, *args, **kwargs):
         """Initialize the model."""
         pass
 
-    @abstractmethod
-    def encode(self, image, message: MessageType):
+    def encode(self, image: np.ndarray, message: MessageType):
         """Encode the image."""
-        pass
+        if isinstance(message, str):
+            return self.encode_str(image, message)
+        if isinstance(message, np.ndarray):
+            return self.encode_img(image, message)
+        raise ValueError("Not a valid message type")
 
     @abstractmethod
     def decode(self, image) -> MessageType:
@@ -33,3 +35,11 @@ class BaseStenographyModel(ABC):
     def load(self, *args, **kwargs):
         """Load the model."""
         pass
+
+    def encode_str(self, image: np.ndarray, to_encode: str) -> np.ndarray:
+        """Encode one string."""
+        raise NotImplementedError("We can't encode str in images")
+
+    def decode_img(self, image: np.ndarray, to_encode: np.ndarray) -> np.ndarray:
+        """Encode one string."""
+        raise NotImplementedError("We can't encode image in images")
