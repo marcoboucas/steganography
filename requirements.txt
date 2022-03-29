@@ -1,0 +1,6 @@
+fire==0.4.0
+opencv-python==4.5.5.64
+numpy==1.22.3 # opencv
+pandas==1.4.1
+matplotlib==3.5.1
+seaborn==0.11.2

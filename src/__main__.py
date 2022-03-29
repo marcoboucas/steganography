@@ -1,0 +1,89 @@
+"""Main file."""
+
+import logging
+
+import cv2
+import numpy as np
+from fire import Fire
+
+from src.models import get_model
+from src.types import MessageType
+
+
+class CLI:
+    """Our CLI."""
+
+    def __init__(self):
+        """Initialize our CLI."""
+        self.logger = logging.getLogger("CLI")
+        self.logger.info("Starting your request !")
+
+    def encode(
+        self, model: str, image_path: str, message_path: str, output_path: str
+    ) -> None:
+        """Encode a message in an image."""
+        self.logger.info("Encoding message in image.")
+
+        model_instance = get_model(model)
+
+        image = self._load_image(image_path)
+        message = self._load_message(message_path)
+
+        encoded_image = model_instance.encode(image, message)
+
+        self._save_image(encoded_image, output_path)
+
+    def encode(self, model: str, image_path: str, message_path: str) -> None:
+        """Encode a message in an image."""
+        self.logger.info("Encoding message in image.")
+
+        model_instance = get_model(model)
+
+        image = self._load_image(image_path)
+        message = self._load_message(message_path)
+
+        encoded_image = model_instance.encode(image, message)
+
+        self._save_image(encoded_image, output_path)
+
+    def _load_message(self, message_path: str) -> MessageType:
+        """Load a message (can be a text or image)."""
+        self.logger.info("Loading message to hide.")
+        if message_path.endswith(".txt"):
+            with open(message_path, "r", encoding="utf-8") as f:
+                message = f.read()
+                self.logger.info(
+                    "Message loaded, type text with %i characters.", len(message)
+                )
+                return message
+        if any(message_path.endswith(x) for x in {".png", ".jpg"}):
+            raise NotImplementedError("Not yet implemented for images.")
+        raise ValueError("Unknown file type.")
+
+    def _load_image(self, image_path: str) -> np.ndarray:
+        """Load an image."""
+        self.logger.info("Loading image.")
+        img = cv2.imread(image_path)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        return img
+
+    def _save_image(self, image: np.ndarray, image_path: str) -> None:
+        """Save an image."""
+        self.logger.info("Saving image with the hidden message inside.")
+        cv2.imwrite(image_path, image)
+
+    def _save_message(self, message: MessageType, message_path: str) -> None:
+        """Save a message."""
+        self.logger.info("Saving message.")
+        if isinstance(message, str):
+            with open(message_path, "w", encoding="utf-8") as f:
+                f.write(message)
+        elif isinstance(message, np.ndarray):
+            cv2.imwrite(message_path, message)
+        else:
+            raise ValueError(f"Unknown message type: '{type(message)}'.")
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    Fire(CLI)
