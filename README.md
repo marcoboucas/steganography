@@ -1,3 +1,3 @@
-# Stenography
+# Steganography
 
 TODO

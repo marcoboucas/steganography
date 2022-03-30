@@ -5,10 +5,10 @@ import numpy as np
 
 from src.utils.text import bin_to_charac, convert_octet_to_str, convert_str_to_octet
 
-from .base import BaseStenographyModel, MessageType
+from .base import BaseSteganographyModel, MessageType
 
 
-class LSBModel(BaseStenographyModel):
+class LSBModel(BaseSteganographyModel):
     """LSB model."""
 
     def __init__(self, *args, end_token: str = "[END]", channel: int = 0, **kwargs):
@@ -20,20 +20,20 @@ class LSBModel(BaseStenographyModel):
     def encode_str(self, image: np.ndarray, text: str) -> np.ndarray:
         """Encode one string."""
         text = text + self.end_token
-
+        new_image = image.copy()
         # Convert to bytes
         to_bytes = convert_str_to_octet(text)
 
         # Now add to the image the message
-        channel_img = cv2.split(image)[self.channel]
+        channel_img = cv2.split(new_image)[self.channel]
 
         # Add the message to the red channel
         for i in range(len(to_bytes)):
             x, y = i % channel_img.shape[0], i // channel_img.shape[0]
             channel_img[x, y] = self.set_last_bit(channel_img[x, y], to_bytes[i])
 
-        image[:, :, self.channel] = channel_img
-        return image
+        new_image[:, :, self.channel] = channel_img
+        return new_image
 
     def decode(self, img: np.ndarray, end_token: str = "[END]", channel: int = 0) -> str:
         """Decode message."""

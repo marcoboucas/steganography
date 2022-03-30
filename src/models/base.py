@@ -1,4 +1,4 @@
-"""Base Model for stenography."""
+"""Base Model for steganography."""
 
 
 from abc import ABC, abstractmethod
@@ -8,8 +8,8 @@ import numpy as np
 from src.types import MessageType
 
 
-class BaseStenographyModel(ABC):
-    """Base model for stenography."""
+class BaseSteganographyModel(ABC):
+    """Base model for steganography."""
 
     def __init__(self, *args, **kwargs):
         """Initialize the model."""
