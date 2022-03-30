@@ -40,6 +40,6 @@ class BaseSteganographyModel(ABC):
         """Encode one string."""
         raise NotImplementedError("We can't encode str in images")
 
-    def decode_img(self, image: np.ndarray, to_encode: np.ndarray) -> np.ndarray:
+    def encode_img(self, image: np.ndarray, to_encode: np.ndarray) -> np.ndarray:
         """Encode one string."""
         raise NotImplementedError("We can't encode image in images")

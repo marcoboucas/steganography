@@ -10,6 +10,7 @@ class SteganographyModels(Enum):
     """List of available models."""
 
     LSB = "LSB (Least Significant Bit)"
+    BASE_MERGE = "Basic MERGE (A basic image merge)"
 
 
 def get_model(model_name: str) -> BaseSteganographyModel:
@@ -28,4 +29,8 @@ def get_model(model_name: str) -> BaseSteganographyModel:
         from .lsb import LSBModel
 
         return LSBModel()
+    if corresponding_name == SteganographyModels.BASE_MERGE:
+        from .base_merge import MergeModel
+
+        return MergeModel()
     raise NotImplementedError(f"Model {corresponding_name} is not implemented.")

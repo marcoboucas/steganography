@@ -35,9 +35,9 @@ class LSBModel(BaseSteganographyModel):
         new_image[:, :, self.channel] = channel_img
         return new_image
 
-    def decode(self, img: np.ndarray, end_token: str = "[END]", channel: int = 0) -> str:
+    def decode(self, img: np.ndarray) -> str:
         """Decode message."""
-        channel_img = cv2.split(img)[channel]
+        channel_img = cv2.split(img)[self.channel]
 
         # Get the message
         decoded_message = ""
@@ -50,8 +50,8 @@ class LSBModel(BaseSteganographyModel):
             if len(current_character) == 8:
                 decoded_message += bin_to_charac(current_character)
                 current_character = ""
-                if decoded_message.endswith(end_token):
-                    return decoded_message[: -len(end_token)]
+                if decoded_message.endswith(self.end_token):
+                    return decoded_message[: -len(self.end_token)]
         return "Not found"
 
     @staticmethod
