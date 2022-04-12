@@ -3,9 +3,9 @@
 import cv2
 import numpy as np
 
-from src.utils.text import bin_to_charac, convert_octet_to_str, convert_str_to_octet
+from src.utils.text import bin_to_charac, convert_str_to_octet
 
-from .base import BaseSteganographyModel, MessageType
+from .base import BaseSteganographyModel
 
 
 class LSBModel(BaseSteganographyModel):
@@ -17,9 +17,9 @@ class LSBModel(BaseSteganographyModel):
         self.end_token = end_token
         self.channel = channel
 
-    def encode_str(self, image: np.ndarray, text: str) -> np.ndarray:
+    def encode_str(self, image: np.ndarray, to_encode: str) -> np.ndarray:
         """Encode one string."""
-        text = text + self.end_token
+        text = to_encode + self.end_token
         new_image = image.copy()
         # Convert to bytes
         to_bytes = convert_str_to_octet(text)
@@ -28,23 +28,22 @@ class LSBModel(BaseSteganographyModel):
         channel_img = cv2.split(new_image)[self.channel]
 
         # Add the message to the red channel
-        for i in range(len(to_bytes)):
+        for i, byte in enumerate(to_bytes):
             x, y = i % channel_img.shape[0], i // channel_img.shape[0]
-            channel_img[x, y] = self.set_last_bit(channel_img[x, y], to_bytes[i])
+            channel_img[x, y] = self.set_last_bit(channel_img[x, y], byte)
 
         new_image[:, :, self.channel] = channel_img
         return new_image
 
-    def decode(self, img: np.ndarray) -> str:
+    def decode(self, image: np.ndarray) -> str:
         """Decode message."""
-        channel_img = cv2.split(img)[self.channel]
+        channel_img = cv2.split(image)[self.channel]
 
         # Get the message
         decoded_message = ""
         current_character = ""
         for i in range(channel_img.shape[0] * channel_img.shape[1]):
             x, y = i % channel_img.shape[0], i // channel_img.shape[0]
-            c = channel_img[x, y]
             current_character += self.read_last_bit(channel_img[x, y])
 
             if len(current_character) == 8:

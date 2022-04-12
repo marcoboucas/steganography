@@ -53,15 +53,14 @@ class CLI:
         """Load a message (can be a text or image)."""
         self.logger.info("Loading message to hide.")
         if message_path.endswith(".txt"):
-            with open(message_path, "r", encoding="utf-8") as f:
-                message = f.read()
+            with open(message_path, "r", encoding="utf-8") as file:
+                message = file.read()
                 self.logger.info("Message loaded, type text with %i characters.", len(message))
                 return message
-        if any(message_path.endswith(x) for x in {".png", ".jpg"}):
+        if any(message_path.endswith(x) for x in [".png", ".jpg", ".jpeg"]):
             return load_image(message_path)
         self.logger.info("We consider this is a plain text")
         return message_path
-        raise ValueError("Unknown file type.")
 
     def _load_image(self, image_path: str) -> np.ndarray:
         """Load an image."""
@@ -77,8 +76,8 @@ class CLI:
         """Save a message."""
         self.logger.info("Saving message.")
         if isinstance(message, str):
-            with open(message_path, "w", encoding="utf-8") as f:
-                f.write(message)
+            with open(message_path, "w", encoding="utf-8") as file:
+                file.write(message)
         elif isinstance(message, np.ndarray):
             cv2.imwrite(message_path, message)
         else:
