@@ -1,4 +1,4 @@
-"""Base Model for stenography."""
+"""Base Model for steganography."""
 
 
 from abc import ABC, abstractmethod
@@ -8,8 +8,8 @@ import numpy as np
 from src.types import MessageType
 
 
-class BaseStenographyModel(ABC):
-    """Base model for stenography."""
+class BaseSteganographyModel(ABC):
+    """Base model for steganography."""
 
     def __init__(self, *args, **kwargs):
         """Initialize the model."""
@@ -40,6 +40,6 @@ class BaseStenographyModel(ABC):
         """Encode one string."""
         raise NotImplementedError("We can't encode str in images")
 
-    def decode_img(self, image: np.ndarray, to_encode: np.ndarray) -> np.ndarray:
+    def encode_img(self, image: np.ndarray, to_encode: np.ndarray) -> np.ndarray:
         """Encode one string."""
         raise NotImplementedError("We can't encode image in images")

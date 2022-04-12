@@ -9,6 +9,7 @@ from fire import Fire
 
 from src.models import get_model
 from src.types import MessageType
+from src.utils.data_manipulation import load_image
 
 
 class CLI:
@@ -57,7 +58,7 @@ class CLI:
                 self.logger.info("Message loaded, type text with %i characters.", len(message))
                 return message
         if any(message_path.endswith(x) for x in {".png", ".jpg"}):
-            raise NotImplementedError("Not yet implemented for images.")
+            return load_image(message_path)
         self.logger.info("We consider this is a plain text")
         return message_path
         raise ValueError("Unknown file type.")
@@ -65,9 +66,7 @@ class CLI:
     def _load_image(self, image_path: str) -> np.ndarray:
         """Load an image."""
         self.logger.info("Loading image.")
-        img = cv2.imread(image_path)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        return img
+        return load_image(image_path)
 
     def _save_image(self, image: np.ndarray, image_path: str) -> None:
         """Save an image."""

@@ -30,10 +30,8 @@ client_secrets.json
 tmp
 *.ipynb
 *.png
-!src/data/stopwords.txt
 
-tf_idf.prof
 *.json
 *.csv
 logs.log*
-model_examples.txt
+!notebooks/*.ipynb
