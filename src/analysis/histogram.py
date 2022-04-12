@@ -3,7 +3,6 @@
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
 
 
 def generate_histogram(image: np.ndarray) -> np.ndarray:

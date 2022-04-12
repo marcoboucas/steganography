@@ -1,6 +1,6 @@
 """Base Model for steganography."""
 
-
+import logging
 from abc import ABC, abstractmethod
 
 import numpy as np
@@ -11,9 +11,9 @@ from src.types import MessageType
 class BaseSteganographyModel(ABC):
     """Base model for steganography."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):  # pylint: disable=unused-argument
         """Initialize the model."""
-        pass
+        self.logger = logging.getLogger(self.__class__.__name__)
 
     def encode(self, image: np.ndarray, message: MessageType):
         """Encode the image."""
@@ -26,15 +26,12 @@ class BaseSteganographyModel(ABC):
     @abstractmethod
     def decode(self, image) -> MessageType:
         """Decode the image."""
-        pass
 
     def save(self, *args, **kwargs):
         """Save the model."""
-        pass
 
     def load(self, *args, **kwargs):
         """Load the model."""
-        pass
 
     def encode_str(self, image: np.ndarray, to_encode: str) -> np.ndarray:
         """Encode one string."""

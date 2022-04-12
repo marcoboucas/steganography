@@ -18,13 +18,13 @@ def get_model(model_name: str) -> BaseSteganographyModel:
     """Get one model."""
     try:
         corresponding_name = getattr(SteganographyModels, model_name.upper())
-    except AttributeError:
+    except AttributeError as err:
         raise ValueError(
             (
                 f"Model {model_name} does not exist. Available models:\n"
                 "\n".join(list(map(lambda x: f"{x.name}", SteganographyModels)))
             )
-        )
+        ) from err
 
     if corresponding_name == SteganographyModels.LSB:
         from .lsb import LSBModel
