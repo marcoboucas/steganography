@@ -13,6 +13,7 @@ class SteganographyModels(Enum):
     BASE_MERGE = "Basic MERGE (A basic image merge)"
     WT = "WT (Wavelet Transform)"
     DCT = "DCT (Discrete Cosine Transform)"
+    STEGANOGAN = "SteganoGAN"
 
 
 def get_model(model_name: str, *args, **kwargs) -> BaseSteganographyModel:
@@ -43,4 +44,8 @@ def get_model(model_name: str, *args, **kwargs) -> BaseSteganographyModel:
         from .dct import DCTModel
 
         return DCTModel(*args, **kwargs)
+    if corresponding_name == SteganographyModels.STEGANOGAN:
+        from .steganogan import SteganoGanModel
+
+        return SteganoGanModel(*args, **kwargs)
     raise NotImplementedError(f"Model {corresponding_name} is not implemented.")
