@@ -4,5 +4,5 @@ disable=too-few-public-methods,duplicate-code
 good-names=i,j,k,X_train,y_train,X_test,y_test,X_val,y_val,id,X,y,x,db,df,ax,v
 max-args=6
 max-locals=17
-generated-members=torch.*,pd.*
+generated-members=torch.*,pd.*,cv2.*
 extension-pkg-whitelist=lxml
