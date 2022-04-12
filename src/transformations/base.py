@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 
 
-def BaseTransformation(ABC):
+class BaseTransformation(ABC):
     """Base Transformation."""
 
     def __init__(self):
