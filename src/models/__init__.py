@@ -12,6 +12,7 @@ class SteganographyModels(Enum):
     LSB = "LSB (Least Significant Bit)"
     BASE_MERGE = "Basic MERGE (A basic image merge)"
     PVD = "PVD (Pixel Value Differencing)"
+    GLM = "GLM (Gray Level Modification)"
     WT = "WT (Wavelet Transform)"
     DCT = "DCT (Discrete Cosine Transform)"
 
@@ -49,5 +50,9 @@ def get_model(model_name: str, *args, **kwargs) -> BaseSteganographyModel:
         from .dct import DCTModel
 
         return DCTModel(*args, **kwargs)
+    if corresponding_name == SteganographyModels.GLM:
+        from .glm import GLMModel
+
+        return GLMModel(*args, **kwargs)
 
     raise NotImplementedError(f"Model {corresponding_name} is not implemented.")
