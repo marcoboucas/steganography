@@ -1,7 +1,6 @@
 """Models."""
 
 from enum import Enum
-from multiprocessing.sharedctypes import Value
 
 from .base import BaseSteganographyModel
 

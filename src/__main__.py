@@ -1,13 +1,14 @@
 """Main file."""
 
 import logging
-from typing import Optional
+from typing import List, Optional
 
 import cv2
 import numpy as np
 from fire import Fire
 
 from src.models import get_model
+from src.transformations import get_transformations
 from src.types import MessageType
 from src.utils.data_manipulation import load_image
 
@@ -48,6 +49,15 @@ class CLI:
         else:
             print(f"Message: {decoded_message}")
         return decoded_message
+
+    def transform(self, image_path: str, new_image_path: str, transformations: List[str]) -> None:
+        """Use several transformations to transform/modify the image."""
+        self.logger.info("Transforming image.")
+        image = self._load_image(image_path)
+        transformations = get_transformations(transformations)
+        for transformation in transformations:
+            image = transformation(image)
+        self._save_image(image, new_image_path)
 
     def _load_message(self, message_path: str) -> MessageType:
         """Load a message (can be a text or image)."""
