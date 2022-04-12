@@ -11,9 +11,11 @@ class SteganographyModels(Enum):
 
     LSB = "LSB (Least Significant Bit)"
     BASE_MERGE = "Basic MERGE (A basic image merge)"
+    PVD = "PVD (Pixel Value Differencing)"
     WT = "WT (Wavelet Transform)"
     DCT = "DCT (Discrete Cosine Transform)"
     STEGANOGAN = "SteganoGAN"
+
 
 
 def get_model(model_name: str, *args, **kwargs) -> BaseSteganographyModel:
@@ -36,6 +38,10 @@ def get_model(model_name: str, *args, **kwargs) -> BaseSteganographyModel:
         from .base_merge import MergeModel
 
         return MergeModel(*args, **kwargs)
+    if corresponding_name == SteganographyModels.PVD:
+        from .pvd import PVDModel
+
+        return PVDModel(*args, **kwargs)
     if corresponding_name == SteganographyModels.WT:
         from .wt import WTModel
 
@@ -44,6 +50,7 @@ def get_model(model_name: str, *args, **kwargs) -> BaseSteganographyModel:
         from .dct import DCTModel
 
         return DCTModel(*args, **kwargs)
+
     if corresponding_name == SteganographyModels.STEGANOGAN:
         from .steganogan import SteganoGanModel
 

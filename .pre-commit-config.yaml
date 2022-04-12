@@ -15,10 +15,3 @@ repos:
     rev: 5.9.3
     hooks:
       - id: isort
-  - repo: local
-    hooks:
-      - id: pytest
-        name: pytest
-        entry: make test
-        language: system
-        types: [python]
