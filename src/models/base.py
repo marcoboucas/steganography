@@ -54,7 +54,12 @@ class BaseSteganographyModel(ABC):
     def _read_one(self, layer_name: str, name: str) -> np.ndarray:
         """Read one matrix."""
         path = os.path.join(self.tmp_folder, f"{layer_name}_{name}.npy")
-        return np.load(path, allow_pickle=True)
+        element = np.load(path, allow_pickle=True)
+        try:
+            os.remove(path)
+        except PermissionError:
+            self.logger.warning("Can't delete the matrix file")
+        return element
 
     @staticmethod
     def _resize_both_images(
@@ -62,7 +67,6 @@ class BaseSteganographyModel(ABC):
     ) -> Tuple[np.ndarray, np.ndarray]:
         """Resize both images to same shape."""
         size = min(image1.shape[0], image1.shape[1], image2.shape[0], image2.shape[1])
-        size = 128
         image1_resized = cv2.resize(image1, (size, size))
         image2_resized = cv2.resize(image2, (size, size))
         return image1_resized, image2_resized
