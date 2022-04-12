@@ -11,6 +11,7 @@ class SteganographyModels(Enum):
 
     LSB = "LSB (Least Significant Bit)"
     BASE_MERGE = "Basic MERGE (A basic image merge)"
+    PVD = "PVD (Pixel Value Differencing)"
 
 
 def get_model(model_name: str) -> BaseSteganographyModel:
@@ -33,4 +34,10 @@ def get_model(model_name: str) -> BaseSteganographyModel:
         from .base_merge import MergeModel
 
         return MergeModel()
+
+    if corresponding_name == SteganographyModels.PVD:
+        from .pvd import PVDModel
+
+        return PVDModel()
+
     raise NotImplementedError(f"Model {corresponding_name} is not implemented.")
