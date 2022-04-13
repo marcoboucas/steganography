@@ -35,6 +35,26 @@ class LSBModel(BaseSteganographyModel):
         new_image[:, :, self.channel] = channel_img
         return new_image
 
+    def encode_img(self, image: np.ndarray, to_encode: np.ndarray) -> np.ndarray:
+        """Encode one image."""
+        new_image = image.copy()
+
+        height = min(to_encode.shape[0], image.shape[0])
+        width = min(to_encode.shape[1], image.shape[1])
+
+        for i in range(height):
+            for j in range(width):
+                binary_pixel_img_original = self.convert_pixel_to_binary(image[i, j])
+                binary_pixel_img_to_hide = self.convert_pixel_to_binary(to_encode[i, j])
+
+                binary_new_pixel = self.mix_pixel(
+                    binary_pixel_img_original, binary_pixel_img_to_hide
+                )
+                new_pixel = self.convert_binary_to_pixel(binary_new_pixel)
+
+                new_image[i, j] = new_pixel
+        return new_image
+
     def decode(self, image: np.ndarray) -> str:
         """Decode message."""
         channel_img = cv2.split(image)[self.channel]
@@ -53,6 +73,19 @@ class LSBModel(BaseSteganographyModel):
                     return decoded_message[: -len(self.end_token)]
         return "Not found"
 
+    def decode_img(self, image: np.ndarray) -> np.ndarray:
+        """Decode image."""
+        decode_img = image.copy()
+
+        for i in range(image.shape[0]):
+            for j in range(image.shape[1]):
+                binary_pixel_img = self.convert_pixel_to_binary(image[i, j])
+                binary_pixel_img_hidden = self.unmix_pixel(binary_pixel_img)
+
+                pixel_img_hidden = self.convert_binary_to_pixel(binary_pixel_img_hidden)
+                decode_img[i, j] = pixel_img_hidden
+        return decode_img
+
     @staticmethod
     def set_last_bit(number: int, bit: str) -> int:
         """Set the last bit."""
@@ -62,3 +95,23 @@ class LSBModel(BaseSteganographyModel):
     def read_last_bit(number: int) -> str:
         """Read the last bit."""
         return bin(number)[-1]
+
+    @staticmethod
+    def convert_pixel_to_binary(pixel):
+        """Convert pixel to binary."""
+        return [format(channel, "b").zfill(8) for channel in pixel]
+
+    @staticmethod
+    def convert_binary_to_pixel(binary_pixel):
+        """Convert binary pixel to pixel."""
+        return [int(channel, 2) for channel in binary_pixel]
+
+    @staticmethod
+    def mix_pixel(origin, hiden):
+        """Return a new pixel by taking the 4 first bits of the original image pixel and the 4 first bits of the pixel of the image to hide"""
+        return [origin[i][:4] + hiden[i][:4] for i in range(len(origin))]
+
+    @staticmethod
+    def unmix_pixel(pixel):
+        """Return a pixel which looks like the one of the hidden image"""
+        return [pixel[i][4:] + "0000" for i in range(len(pixel))]
