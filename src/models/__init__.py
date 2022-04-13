@@ -15,8 +15,7 @@ class SteganographyModels(Enum):
     GLM = "GLM (Gray Level Modification)"
     WT = "WT (Wavelet Transform)"
     DCT = "DCT (Discrete Cosine Transform)"
-    STEGANOGAN = "SteganoGAN"
-
+    # STEGANOGAN = "SteganoGAN"  # Not working properly
 
 
 def get_model(model_name: str, *args, **kwargs) -> BaseSteganographyModel:
@@ -56,8 +55,8 @@ def get_model(model_name: str, *args, **kwargs) -> BaseSteganographyModel:
 
         return GLMModel(*args, **kwargs)
 
-    if corresponding_name == SteganographyModels.STEGANOGAN:
-        from .steganogan import SteganoGanModel
+    # if corresponding_name == SteganographyModels.STEGANOGAN:
+    #     from .steganogan import SteganoGanModel
 
-        return SteganoGanModel(*args, **kwargs)
+    #     return SteganoGanModel(*args, **kwargs)
     raise NotImplementedError(f"Model {corresponding_name} is not implemented.")

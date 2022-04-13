@@ -1,6 +1,5 @@
 """PVD Model."""
 
-import math
 
 import cv2
 import numpy as np
@@ -19,7 +18,6 @@ class GLMModel(BaseSteganographyModel):
         self.end_token = end_token
         self.channel = channel
 
-
     def encode_str(self, image: np.ndarray, text: str) -> np.ndarray:
         """Encode one string."""
         text = text + self.end_token
@@ -34,43 +32,39 @@ class GLMModel(BaseSteganographyModel):
         for index, bit in enumerate(to_bytes):
             row, col = GLMModel.__get_bit_position(index, channel_img.shape[0])
 
-            if channel_img[col, row]%2 != 0:
+            if channel_img[col, row] % 2 != 0:
                 channel_img[col, row] += 1
-            if bit == '1':
+            if bit == "1":
                 channel_img[col, row] -= 1
 
         return np.dstack((channel_img, channel_img, channel_img))
 
-
-
-
-
-
-    def decode(self, img: np.ndarray) -> str:
+    def decode(self, image: np.ndarray) -> str:
         """Decode message."""
         # Get the good channel
-        channel_img = cv2.split(img)[self.channel]
+        channel_img = cv2.split(image)[self.channel]
 
         decoded_binary_message = ""
         decoded_message = ""
-        current_character = ""
 
         index = 0
 
-        while(decoded_message[-5:]!=self.end_token):
-            row, col = GLMModel.__get_bit_position(index, channel_img.shape[0])
+        try:
+            while decoded_message[-5:] != self.end_token:
+                row, col = GLMModel.__get_bit_position(index, channel_img.shape[0])
+                if channel_img[col, row] % 2 == 0:
+                    decoded_binary_message += "0"
+                else:
+                    decoded_binary_message += "1"
+                index += 1
+                decoded_message = convert_octet_to_str(decoded_binary_message)
 
-            if channel_img[col, row]%2 == 0:
-                decoded_binary_message += '0'
-            else:
-                decoded_binary_message += '1'
-            index+=1
-            decoded_message = convert_octet_to_str(decoded_binary_message)
-
-        return decoded_message[: -len(self.end_token)]
+            return decoded_message[: -len(self.end_token)]
+        except IndexError:
+            return f"Not found: '{decoded_message[:30]}'"
 
     @staticmethod
     def __get_bit_position(index, width):
-        row=(2*index+5)%width
-        col= (2*index+5)//width
+        row = (2 * index + 5) % width
+        col = (2 * index + 5) // width
         return row, col

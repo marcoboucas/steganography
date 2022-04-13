@@ -23,9 +23,15 @@ class BaseSteganographyModel(ABC):
     def encode(self, image: np.ndarray, message: MessageType):
         """Encode the image."""
         if isinstance(message, str):
-            return self.encode_str(image, message)
+            if hasattr(self, "encode_str"):
+                return self.encode_str(image, message)
+            # Else
+            raise NotImplementedError("We can't encode str in images !")
         if isinstance(message, np.ndarray):
-            return self.encode_img(image, message)
+            if hasattr(self, "encode_img"):
+                return self.encode_img(image, message)
+            # Else
+            raise NotADirectoryError("We can't encode images in images !")
         raise ValueError("Not a valid message type")
 
     @abstractmethod
@@ -37,14 +43,6 @@ class BaseSteganographyModel(ABC):
 
     def load(self, *args, **kwargs):
         """Load the model."""
-
-    def encode_str(self, image: np.ndarray, to_encode: str) -> np.ndarray:
-        """Encode one string."""
-        raise NotImplementedError("We can't encode str in images")
-
-    def encode_img(self, image: np.ndarray, to_encode: np.ndarray) -> np.ndarray:
-        """Encode one string."""
-        raise NotImplementedError("We can't encode image in images")
 
     def _save_one(self, matrix: np.ndarray, layer_name: str, name: str) -> None:
         """Save one matrix."""
