@@ -71,7 +71,7 @@ class LSBModel(BaseSteganographyModel):
                 current_character = ""
                 if decoded_message.endswith(self.end_token):
                     return decoded_message[: -len(self.end_token)]
-        return "Not found"
+        return f"Not found: '{decoded_message[:30]}'"
 
     def decode_img(self, image: np.ndarray) -> np.ndarray:
         """Decode image."""

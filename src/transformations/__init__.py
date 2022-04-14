@@ -11,6 +11,9 @@ class Transformations(Enum):
     """List of available transformations."""
 
     IDENTITY = "Identity (do nothing)"
+    JITTER = "Jitter (color modification)"
+    FLIP = "Flip (flip horizontal)"
+    BLUR = "Blur (gaussian blur)"
 
 
 def get_transformations(transformation_names: List[str]) -> List[BaseTransformation]:
@@ -40,4 +43,16 @@ def __get_one_transformation(transformation_name: Transformations) -> BaseTransf
         from .identity import IdentityTransformation
 
         return IdentityTransformation()
+    if transformation_name == Transformations.JITTER:
+        from .jitter import JitterTransformation
+
+        return JitterTransformation()
+    if transformation_name == Transformations.FLIP:
+        from .flip import FlipTransformation
+
+        return FlipTransformation()
+    if transformation_name == Transformations.BLUR:
+        from .blur import BlurTransformation
+
+        return BlurTransformation()
     raise NotImplementedError(f"Transformation {transformation_name} is not implemented.")

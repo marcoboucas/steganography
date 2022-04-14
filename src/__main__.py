@@ -54,9 +54,9 @@ class CLI:
         """Use several transformations to transform/modify the image."""
         self.logger.info("Transforming image.")
         image = self._load_image(image_path)
-        transformations = get_transformations(transformations)
-        for transformation in transformations:
-            image = transformation(image)
+        transformations_functions = get_transformations(transformations)
+        for transformation_function in transformations_functions:
+            image = transformation_function(image)
         self._save_image(image, new_image_path)
 
     def _load_message(self, message_path: str) -> MessageType:
