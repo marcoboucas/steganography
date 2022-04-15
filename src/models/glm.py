@@ -39,7 +39,7 @@ class GLMModel(BaseSteganographyModel):
 
         return np.dstack((channel_img, channel_img, channel_img))
 
-    def decode(self, image: np.ndarray) -> str:
+    def decode_str(self, image: np.ndarray) -> str:
         """Decode message."""
         # Get the good channel
         channel_img = cv2.split(image)[self.channel]

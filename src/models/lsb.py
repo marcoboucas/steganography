@@ -55,7 +55,7 @@ class LSBModel(BaseSteganographyModel):
                 new_image[i, j] = new_pixel
         return new_image
 
-    def decode(self, image: np.ndarray) -> str:
+    def decode_str(self, image: np.ndarray) -> str:
         """Decode message."""
         channel_img = cv2.split(image)[self.channel]
 

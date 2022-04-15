@@ -23,7 +23,7 @@ class DCTModel(BaseSteganographyModel):
         self._save_one(image_c, "cosine", "image_c")
         return idct2(image_c + self.factor * message_c).astype(np.uint8)
 
-    def decode(self, image: np.ndarray) -> np.ndarray:
+    def decode_img(self, image: np.ndarray) -> np.ndarray:
         """Decode message."""
         image_c = self._read_one("cosine", "image_c")
         return idct2((dct2(image) - image_c) / self.factor).astype(np.uint8)

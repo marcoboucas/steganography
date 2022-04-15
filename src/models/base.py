@@ -34,9 +34,13 @@ class BaseSteganographyModel(ABC):
             raise NotADirectoryError("We can't encode images in images !")
         raise ValueError("Not a valid message type")
 
-    @abstractmethod
-    def decode(self, image) -> MessageType:
+    def decode_str(self, image: np.ndarray) -> str:
         """Decode the image."""
+        raise NotImplementedError("We can't decode str in images with this method !")
+
+    def decode_img(self, image: np.ndarray) -> np.ndarray:
+        """Decode the image."""
+        raise NotImplementedError("We can't decode images in images with this method !")
 
     def save(self, *args, **kwargs):
         """Save the model."""
