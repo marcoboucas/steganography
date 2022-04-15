@@ -24,6 +24,6 @@ class MergeModel(BaseSteganographyModel):
 
         return new_image
 
-    def decode(self, image: np.ndarray) -> np.ndarray:
+    def decode_img(self, image: np.ndarray) -> np.ndarray:
         """Decode message."""
         return image[0 : self.width, 0 : self.height]

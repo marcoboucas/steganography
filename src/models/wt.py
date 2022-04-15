@@ -25,7 +25,7 @@ class WTModel(BaseSteganographyModel):
             axis=2,
         ).astype(np.uint8)
 
-    def decode(self, image: np.ndarray) -> np.ndarray:
+    def decode_img(self, image: np.ndarray) -> np.ndarray:
         """Decode message."""
         return np.stack(
             [self.__decode_grayscale(image[:, :, i], f"layer_{i}") for i in range(3)], axis=2

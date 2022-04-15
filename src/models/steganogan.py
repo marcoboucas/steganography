@@ -30,7 +30,7 @@ class SteganoGanModel(BaseSteganographyModel):
             self.model.encode(image_.name, path, to_encode)
         return cv2.imread(path)
 
-    def decode(self, image: np.ndarray) -> str:
+    def decode_str(self, image: np.ndarray) -> str:
         """Decode message."""
         with tempfile.NamedTemporaryFile(
             dir=TMP_FOLDER, mode="wb", suffix=".png", delete=False
