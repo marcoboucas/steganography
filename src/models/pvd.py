@@ -106,7 +106,7 @@ class PVDModel(BaseSteganographyModel):
 
         text_to_hide_in_the_pixel = text_to_hide[:nbits]
         decimal_to_hide = int(text_to_hide_in_the_pixel, 2)
-        newpixel = pixel - pixel % (2 ** nbits) + decimal_to_hide
+        newpixel = pixel - pixel % (2**nbits) + decimal_to_hide
         return newpixel
 
     @staticmethod
@@ -117,4 +117,4 @@ class PVDModel(BaseSteganographyModel):
     @staticmethod
     def get_decimal_value(pixel: np.ndarray, nbits: int) -> int:
         """Get the decimal value."""
-        return pixel % (2 ** nbits)
+        return pixel % (2**nbits)
